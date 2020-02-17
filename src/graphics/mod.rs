@@ -812,6 +812,12 @@ pub fn apply_transformations(context: &mut Context) -> GameResult {
 pub fn set_blend_mode(ctx: &mut Context, mode: BlendMode) -> GameResult {
     ctx.gfx_context.set_blend_mode(mode)
 }
+/// Returns a reference to the current Conf object.
+///
+/// This should be up to date with the current Conf settings.
+pub fn conf(ctx: &Context) -> &conf::Conf {
+    &ctx.conf
+}
 
 /// Sets the window mode, such as the size and other properties.
 ///
@@ -1059,5 +1065,4 @@ mod tests {
             assert_relative_eq!(real, expected);
         }
     }
-
 }
