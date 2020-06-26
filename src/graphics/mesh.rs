@@ -259,15 +259,30 @@ impl MeshBuilder {
     /// Create a new mesh for a rectangle.
     pub fn rectangle(&mut self, mode: DrawMode, bounds: Rect, color: Color) -> &mut Self {
         {
+            let time = std::time::Instant::now();
             let buffers = &mut self.buffer;
             let rect = t::math::rect(bounds.x, bounds.y, bounds.w, bounds.h);
             let vb = VertexBuilder {
                 color: LinearColor::from(color),
             };
+            let dur = std::time::Instant::now() - time;
+            if dur.as_millis() > 0 {
+                dbg!(dur.as_millis());
+            }
             match mode {
                 DrawMode::Fill(fill_options) => {
+                    let time = std::time::Instant::now();
                     let builder = &mut t::BuffersBuilder::new(buffers, vb);
+                    let dur = std::time::Instant::now() - time;
+                    if dur.as_millis() > 0 {
+                        dbg!(dur.as_millis());
+                    }
+                    let time = std::time::Instant::now();
                     let _ = t::basic_shapes::fill_rectangle(&rect, &fill_options, builder);
+                    let dur = std::time::Instant::now() - time;
+                    if dur.as_millis() > 0 {
+                        dbg!(dur.as_millis());
+                    }
                 }
                 DrawMode::Stroke(options) => {
                     let builder = &mut t::BuffersBuilder::new(buffers, vb);
@@ -516,7 +531,15 @@ impl Mesh {
     ) -> GameResult<Mesh> {
         let mut mb = MeshBuilder::new();
         let _ = mb.rectangle(mode, bounds, color);
-        mb.build(ctx)
+        let time = std::time::Instant::now();
+
+        let ret = mb.build(ctx);
+        let dur = std::time::Instant::now() - time;
+        if dur.as_millis() > 0 {
+            dbg!(dur.as_millis());
+        }
+
+        ret
     }
 
     /// Create a new `Mesh` from a raw list of triangle points.
